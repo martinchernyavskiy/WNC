@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to send the email to Sendinblue
     function sendEmailToSendinblue(email) {
-        fetch('/.netlify/functions/subscription', {
+        fetch('/.netlify/functions/subscribe', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -232,51 +232,51 @@ document.addEventListener('DOMContentLoaded', function () {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
         if (scrollTop > lastScrollTop) {
-            // Scrolling down, hide the navigation
-            header.style.top = "-100px"; // Hide header by moving it off-screen
+        // Scrolling down, hide the navigation
+        header.style.top = "-100px"; // Hide header by moving it off-screen
+        if (window.innerWidth <= 1024) {
+            menuToggle.style.display = "none"; // Hide toggle menu
+        }
+    } else {
+        // Scrolling up, show the navigation with shadow if past hero section
+        if (scrollTop > heroHeight) {
+            header.classList.add('header-shadow');
             if (window.innerWidth <= 1024) {
-                menuToggle.style.display = "none"; // Hide toggle menu
+                menuToggle.style.display = "flex"; // Show toggle menu only on smaller screens
             }
         } else {
-            // Scrolling up, show the navigation with shadow if past hero section
-            if (scrollTop > heroHeight) {
-                header.classList.add('header-shadow');
-                if (window.innerWidth <= 1024) {
-                    menuToggle.style.display = "flex"; // Show toggle menu only on smaller screens
-                }
+            header.classList.remove('header-shadow');
+            if (window.innerWidth <= 1024) {
+                menuToggle.style.display = "flex"; // Ensure toggle menu is visible in header/hero sections
             } else {
-                header.classList.remove('header-shadow');
-                if (window.innerWidth <= 1024) {
-                    menuToggle.style.display = "flex"; // Ensure toggle menu is visible in header/hero sections
-                } else {
-                    menuToggle.style.display = "none"; // Hide toggle menu on wide screens
-                }
+                menuToggle.style.display = "none"; // Hide toggle menu on wide screens
             }
-            header.style.top = "0"; // Show header by moving it back to the top
         }
-
-        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+        header.style.top = "0"; // Show header by moving it back to the top
     }
 
-    // Add event listener for scrolling
-    window.addEventListener('scroll', handleScroll);
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+}
 
-    // Ensure the navigation is correctly set when the page is loaded
-    handleScroll();
+// Add event listener for scrolling
+window.addEventListener('scroll', handleScroll);
 
-    // Add logic for showing/hiding toggle menu based on screen size
-    window.addEventListener('resize', function () {
-        if (window.innerWidth > 1024) {
-            menuToggle.style.display = "none"; // Hide toggle on wide screens
-        } else {
-            menuToggle.style.display = "flex"; // Show toggle on smaller screens
-        }
-    });
+// Ensure the navigation is correctly set when the page is loaded
+handleScroll();
 
-    // Initial check on page load
+// Add logic for showing/hiding toggle menu based on screen size
+window.addEventListener('resize', function () {
     if (window.innerWidth > 1024) {
         menuToggle.style.display = "none"; // Hide toggle on wide screens
     } else {
         menuToggle.style.display = "flex"; // Show toggle on smaller screens
     }
+});
+
+// Initial check on page load
+if (window.innerWidth > 1024) {
+    menuToggle.style.display = "none"; // Hide toggle on wide screens
+} else {
+    menuToggle.style.display = "flex"; // Show toggle on smaller screens
+}
 });
