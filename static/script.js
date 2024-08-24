@@ -132,9 +132,6 @@ document.addEventListener('DOMContentLoaded', function () {
     subscribeButton.addEventListener('click', function (e) {
         e.preventDefault(); // Prevent form submission for demo purposes
 
-        // Trigger animation immediately
-        showNotification('https://lottie.host/67e8b582-122f-4250-9287-8ff7a3986b21/MpzkTLFcPd.json', 'Processing...');
-
         // Clear any existing error classes
         subscribeButton.classList.remove('jiggle-gradient');
         subscribeButton.classList.remove('jiggle-gradient-red');
@@ -193,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (data.result && data.result.code === 'duplicate_parameter') {
                 // Show error animation and red gradient on button
-                showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', "You're already subscribed!", 1.5); // Speed up the error animation
+                showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'You are already subscribed!', 1.5); // Speed up the error animation
                 subscribeButton.classList.add('jiggle-gradient-red');
                 emailInput.value = ''; // Clear the email input field
                 animationTriggered = true;
@@ -208,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // If no animation was triggered, display the default error after 2 seconds
             setTimeout(() => {
                 if (!animationTriggered) {
-                    showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', "You're already subscribed!", 1.5); // Speed up the error animation
+                    showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'You are already subscribed!', 1.5); // Speed up the error animation
                     subscribeButton.classList.add('jiggle-gradient-red');
                     emailInput.value = ''; // Clear the email input field
                 }
@@ -224,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error:', error);
 
             // Show error notification and red gradient
-            showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', "You're already subscribed!", 1.5); // Speed up the error animation
+            showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'You are already subscribed!', 1.5); // Speed up the error animation
             subscribeButton.classList.add('jiggle-gradient-red');
             emailInput.value = ''; // Clear the email input field
         });
@@ -235,51 +232,51 @@ document.addEventListener('DOMContentLoaded', function () {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
         if (scrollTop > lastScrollTop) {
-            // Scrolling down, hide the navigation
-            header.style.top = "-100px"; // Hide header by moving it off-screen
+        // Scrolling down, hide the navigation
+        header.style.top = "-100px"; // Hide header by moving it off-screen
+        if (window.innerWidth <= 1024) {
+            menuToggle.style.display = "none"; // Hide toggle menu
+        }
+    } else {
+        // Scrolling up, show the navigation with shadow if past hero section
+        if (scrollTop > heroHeight) {
+            header.classList.add('header-shadow');
             if (window.innerWidth <= 1024) {
-                menuToggle.style.display = "none"; // Hide toggle menu
+                menuToggle.style.display = "flex"; // Show toggle menu only on smaller screens
             }
         } else {
-            // Scrolling up, show the navigation with shadow if past hero section
-            if (scrollTop > heroHeight) {
-                header.classList.add('header-shadow');
-                if (window.innerWidth <= 1024) {
-                    menuToggle.style.display = "flex"; // Show toggle menu only on smaller screens
-                }
+            header.classList.remove('header-shadow');
+            if (window.innerWidth <= 1024) {
+                menuToggle.style.display = "flex"; // Ensure toggle menu is visible in header/hero sections
             } else {
-                header.classList.remove('header-shadow');
-                if (window.innerWidth <= 1024) {
-                    menuToggle.style.display = "flex"; // Ensure toggle menu is visible in header/hero sections
-                } else {
-                    menuToggle.style.display = "none"; // Hide toggle menu on wide screens
-                }
+                menuToggle.style.display = "none"; // Hide toggle menu on wide screens
             }
-            header.style.top = "0"; // Show header by moving it back to the top
         }
-
-        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+        header.style.top = "0"; // Show header by moving it back to the top
     }
 
-    // Add event listener for scrolling
-    window.addEventListener('scroll', handleScroll);
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+}
 
-    // Ensure the navigation is correctly set when the page is loaded
-    handleScroll();
+// Add event listener for scrolling
+window.addEventListener('scroll', handleScroll);
 
-    // Add logic for showing/hiding toggle menu based on screen size
-    window.addEventListener('resize', function () {
-        if (window.innerWidth > 1024) {
-            menuToggle.style.display = "none"; // Hide toggle on wide screens
-        } else {
-            menuToggle.style.display = "flex"; // Show toggle on smaller screens
-        }
-    });
+// Ensure the navigation is correctly set when the page is loaded
+handleScroll();
 
-    // Initial check on page load
+// Add logic for showing/hiding toggle menu based on screen size
+window.addEventListener('resize', function () {
     if (window.innerWidth > 1024) {
         menuToggle.style.display = "none"; // Hide toggle on wide screens
     } else {
         menuToggle.style.display = "flex"; // Show toggle on smaller screens
     }
+});
+
+// Initial check on page load
+if (window.innerWidth > 1024) {
+    menuToggle.style.display = "none"; // Hide toggle on wide screens
+} else {
+    menuToggle.style.display = "flex"; // Show toggle on smaller screens
+}
 });
