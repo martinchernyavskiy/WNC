@@ -1,78 +1,56 @@
-function sendEmailToSendinblue(email) {
-    fetch('/.netlify/functions/subscribe', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: email })
-    })
-    .then(response => response.json())
-    .then(data => {
-        let animationTriggered = false;
+exports.handler = async function (event, context) {
+    try {
+        const { email } = JSON.parse(event.body);
 
-        // Check if the user is already subscribed
-        if (data.result && data.result.code === 'duplicate_parameter') {
-            showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'You are already subscribed!', 1.5);
-            subscribeButton.classList.add('jiggle-gradient-red');
-            emailInput.value = '';
-            animationTriggered = true;
-        } else if (data.result && (data.result.id || data.result.email)) {
-            // If subscription is successful
-            subscribeButton.classList.add('jiggle-gradient');
-            emailInput.value = '';
-            showNotification('https://lottie.host/67e8b582-122f-4250-9287-8ff7a3986b21/MpzkTLFcPd.json', 'Thank you for subscribing!');
-            animationTriggered = true;
+        // Log start time
+        const startTime = Date.now();
+
+        // Sendinblue API call
+        const response = await fetch('https://api.sendinblue.com/v3/contacts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'api-key': process.env.SENDINBLUE_API_KEY,
+            },
+            body: JSON.stringify({
+                email: email,
+                listIds: [3], // Replace with your actual list ID
+                updateEnabled: true,
+            }),
+        });
+
+        // Log end time and calculate API response duration
+        const endTime = Date.now();
+        const apiDuration = endTime - startTime;
+        console.log(`Sendinblue API response time: ${apiDuration} ms`);
+
+        let data;
+        try {
+            data = await response.json();
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ error: 'Failed to parse response from the API' }),
+            };
         }
 
-        // Default error handling if no animation was triggered
-        setTimeout(() => {
-            if (!animationTriggered) {
-                showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'You are already subscribed!', 1.5);
-                subscribeButton.classList.add('jiggle-gradient-red');
-                emailInput.value = '';
-            }
-        }, 3000);
-
-        // Reset the button state after the animation ends
-        setTimeout(() => {
-            subscribeButton.classList.remove('jiggle-gradient');
-            subscribeButton.classList.remove('jiggle-gradient-red');
-        }, 600);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-
-        // Handle error scenario
-        showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'You are already subscribed!', 1.5);
-        subscribeButton.classList.add('jiggle-gradient-red');
-        emailInput.value = '';
-    });
-}
-
-// Function to display notifications with animation
-function showNotification(animationSrc, message, speed = 1) {
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.innerHTML = `
-        <div class="notification-content">
-            <dotlottie-player src="${animationSrc}" background="transparent" speed="${speed}" style="width: 150px; height: 150px;" loop autoplay></dotlottie-player>
-            <p>${message}</p>
-        </div>
-    `;
-    document.body.appendChild(notification);
-
-    notification.style.padding = '0 20px';
-
-    // Slide down the notification
-    setTimeout(() => {
-        notification.classList.add('visible');
-    }, 100);
-
-    // Hide the notification after 3 seconds
-    setTimeout(() => {
-        notification.classList.remove('visible');
-        setTimeout(() => {
-            notification.remove();
-        }, 500);
-    }, 3000);
-}
+        if (response.ok) {
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ result: data }),
+            };
+        } else {
+            return {
+                statusCode: response.status,
+                body: JSON.stringify({ error: data }),
+            };
+        }
+    } catch (error) {
+        console.error('Error processing subscription:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'Failed to process subscription' }),
+        };
+    }
+};
