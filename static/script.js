@@ -173,33 +173,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 3000);
     }
 
-    // Function to send the email to Sendinblue
+    // Function to send the email to Sendinblue via Netlify function
     function sendEmailToSendinblue(email) {
-        const listId = 3;
-
-        fetch('https://api.sendinblue.com/v3/contacts', {
+        fetch('/.netlify/functions/subscription', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'api-key': apiKey
             },
-            body: JSON.stringify({
-                email: email,
-                listIds: [listId],
-                updateEnabled: true
-            })
+            body: JSON.stringify({ email: email })
         })
         .then(response => response.json())
         .then(data => {
             let animationTriggered = false;
 
-            if (data.code === 'duplicate_parameter') {
+            if (data.result && data.result.code === 'duplicate_parameter') {
                 // Show error animation and red gradient on button
                 showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'Subscribed!', 1.5); // Speed up the error animation
                 subscribeButton.classList.add('jiggle-gradient-red');
                 emailInput.value = ''; // Clear the email input field
                 animationTriggered = true;
-            } else if (data.id || data.email) {
+            } else if (data.result && (data.result.id || data.result.email)) {
                 // Show success animation and blue gradient on button
                 subscribeButton.classList.add('jiggle-gradient');
                 emailInput.value = ''; // Clear the email input field
