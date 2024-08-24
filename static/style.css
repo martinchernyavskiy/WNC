@@ -473,6 +473,11 @@ nav {
     /* Reduced margin between rows */
 }
 
+.learn-card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
 .learn-card img {
     width: 100%;
     height: auto;
