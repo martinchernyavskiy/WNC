@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 3000);
     }
 
-    // Function to send the email to Sendinblue via Netlify function
+    // Function to send the email to Sendinblue
     function sendEmailToSendinblue(email) {
         fetch('/.netlify/functions/subscription', {
             method: 'POST',
@@ -184,6 +184,8 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
+            console.log(data); // Log the full response to inspect
+
             let animationTriggered = false;
 
             if (data.result && data.result.code === 'duplicate_parameter') {
