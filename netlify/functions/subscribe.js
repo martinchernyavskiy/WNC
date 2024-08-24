@@ -6,8 +6,12 @@ function sendEmailToSendinblue(email) {
         },
         body: JSON.stringify({ email: email })
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log("Response status:", response.status);
+        return response.json();
+    })
     .then(data => {
+        console.log("Data received from server:", data);
         let animationTriggered = false;
 
         if (data.result && data.result.code === 'duplicate_parameter') {
@@ -22,6 +26,8 @@ function sendEmailToSendinblue(email) {
             emailInput.value = ''; // Clear the email input field
             showNotification('https://lottie.host/67e8b582-122f-4250-9287-8ff7a3986b21/MpzkTLFcPd.json', 'Thank you for subscribing!');
             animationTriggered = true;
+        } else {
+            console.error("Unexpected data format received:", data);
         }
 
         // If no animation was triggered, display the default error after 2 seconds
@@ -40,7 +46,7 @@ function sendEmailToSendinblue(email) {
         }, 600); // Adjust the time to match the animation duration
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error occurred during subscription:', error);
 
         // Show error notification and red gradient
         showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'Subscribed!', 1.5); // Speed up the error animation
