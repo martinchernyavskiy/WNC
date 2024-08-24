@@ -9,13 +9,11 @@
 </head>
 
 <body>
-    <!-- Background Overlay and Video -->
     <div id="background-overlay"></div>
-    <video id="background-video" autoplay loop muted playsinline>
+    <video id="background-video" autoplay loop muted playsinline preload="auto">
         <source src="/static/wave_bg.mp4" type="video/mp4">
     </video>
 
-    <!-- Header and Navigation -->
     <header class="fade-in">
         <div class="logo">
             <a href="home.html">
@@ -36,6 +34,7 @@
             </nav>
         </div>
         <a class="cta main-cta" href="#contact">Join Us</a>
+
         <div class="menu-toggle">
             <div class="bar"></div>
             <div class="bar"></div>
@@ -43,7 +42,6 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
     <section id="hero" class="fade-in">
         <h2>Innovate with us</h2>
         <hr>
@@ -51,9 +49,8 @@
         <a href="#events" class="cta">View Events</a>
     </section>
 
-    <!-- Content Below Hero Section -->
+    <!-- New container to isolate sections below hero -->
     <div id="content-below-hero">
-        <!-- About Section -->
         <section id="about" class="fade-in">
             <div class="about-container">
                 <div class="about-text">
@@ -65,7 +62,7 @@
                     </div>
                     <h4>Connecting minds, advancing tech</h4>
                     <p>Wisconsin Neuromorphic Computing (WNC) champions innovation in neuromorphic technologies. Based
-                        in Lisle, we unite students and professionals, offering invaluable resources and events that
+                        in Madison, WI, we unite students and professionals, offering invaluable resources and events that
                         enhance understanding and collaboration. Our vibrant community fosters the growth of
                         neuromorphic computing, empowering individuals to push the boundaries of technology and
                         creativity. Join us in exploring the future of computing and making impactful contributions in
@@ -78,7 +75,6 @@
             </div>
         </section>
 
-        <!-- Learn Section -->
         <section id="learn" class="fade-in">
             <div class="learn-container">
                 <div class="learn-content">
@@ -94,8 +90,8 @@
                     </div>
                     <div class="learn-animation">
                         <dotlottie-player src="https://lottie.host/94784210-e695-421a-bd16-440975d19e2c/QPkHWIE4G1.json"
-                            background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay>
-                        </dotlottie-player>
+                            background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                            autoplay></dotlottie-player>
                     </div>
                 </div>
                 <div class="learn-cards">
@@ -117,8 +113,9 @@
                 </div>
             </div>
         </section>
+        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+            type="module"></script>
 
-        <!-- Contact Section -->
         <section id="contact" class="fade-in">
             <div class="contact-container">
                 <div class="contact-left">
@@ -130,14 +127,14 @@
                     </form>
                 </div>
                 <div class="contact-right">
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+                        type="module"></script>
                     <dotlottie-player src="https://lottie.host/31c58bf1-f4e1-4327-bd91-1d746c97b891/kZzYFn4iIj.json"
-                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay>
-                    </dotlottie-player>
+                        background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                        autoplay></dotlottie-player>
                 </div>
             </div>
         </section>
-
-        <!-- Footer Section -->
         <footer id="footer" class="fade-in">
             <div class="footer-container">
                 <h4>Join us on social media</h4>
@@ -156,7 +153,6 @@
         </footer>
     </div>
 
-    <!-- Load Script -->
     <script src="/static/script.js"></script>
 </body>
 
