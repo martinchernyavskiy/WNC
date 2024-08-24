@@ -62,6 +62,9 @@ document.addEventListener('DOMContentLoaded', function () {
             navLinks.classList.add('active');
         }
 
+        // Animate the toggle icon into an "X" shape
+        menuToggle.classList.toggle('open');
+
         if (window.innerWidth <= 1024) {
             mainCTA.style.display = 'none';
             dropdownCTA.parentElement.style.display = 'block';
@@ -75,17 +78,21 @@ document.addEventListener('DOMContentLoaded', function () {
         if (window.innerWidth > 1024) {
             mainCTA.style.display = 'flex';
             dropdownCTA.parentElement.style.display = 'none';
+            menuToggle.style.display = "none"; // Hide toggle on wide screens
         } else {
             mainCTA.style.display = 'none';
             dropdownCTA.parentElement.style.display = 'block';
+            menuToggle.style.display = "flex"; // Show toggle on smaller screens
         }
     });
 
     if (window.innerWidth > 1024) {
         dropdownCTA.parentElement.style.display = 'none';
+        menuToggle.style.display = "none"; // Hide toggle on wide screens
     } else {
         mainCTA.style.display = 'none';
         dropdownCTA.parentElement.style.display = 'block';
+        menuToggle.style.display = "flex"; // Show toggle on smaller screens
     }
 
     // Close toggle menu on link click with fade effect
@@ -94,6 +101,9 @@ document.addEventListener('DOMContentLoaded', function () {
         item.addEventListener('click', function () {
             navLinks.classList.add('inactive');
             navLinks.classList.remove('active');
+
+            // Revert the toggle menu icon to 3 lines
+            menuToggle.classList.remove('open');
         });
     });
 
@@ -109,6 +119,9 @@ document.addEventListener('DOMContentLoaded', function () {
             // Close the toggle menu
             navLinks.classList.remove('active');
             navLinks.classList.add('inactive');
+
+            // Revert the toggle menu icon to 3 lines
+            menuToggle.classList.remove('open');
         });
     }
 
@@ -226,12 +239,23 @@ document.addEventListener('DOMContentLoaded', function () {
         if (scrollTop > lastScrollTop) {
             // Scrolling down, hide the navigation
             header.style.top = "-100px"; // Hide header by moving it off-screen
+            if (window.innerWidth <= 1024) {
+                menuToggle.style.display = "none"; // Hide toggle menu
+            }
         } else {
             // Scrolling up, show the navigation with shadow if past hero section
             if (scrollTop > heroHeight) {
                 header.classList.add('header-shadow');
+                if (window.innerWidth <= 1024) {
+                    menuToggle.style.display = "flex"; // Show toggle menu only on smaller screens
+                }
             } else {
                 header.classList.remove('header-shadow');
+                if (window.innerWidth <= 1024) {
+                    menuToggle.style.display = "flex"; // Ensure toggle menu is visible in header/hero sections
+                } else {
+                    menuToggle.style.display = "none"; // Hide toggle menu on wide screens
+                }
             }
             header.style.top = "0"; // Show header by moving it back to the top
         }
@@ -244,4 +268,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Ensure the navigation is correctly set when the page is loaded
     handleScroll();
+
+    // Add logic for showing/hiding toggle menu based on screen size
+    window.addEventListener('resize', function () {
+        if (window.innerWidth > 1024) {
+            menuToggle.style.display = "none"; // Hide toggle on wide screens
+        } else {
+            menuToggle.style.display = "flex"; // Show toggle on smaller screens
+        }
+    });
+
+    // Initial check on page load
+    if (window.innerWidth > 1024) {
+        menuToggle.style.display = "none"; // Hide toggle on wide screens
+    } else {
+        menuToggle.style.display = "flex"; // Show toggle on smaller screens
+    }
 });
