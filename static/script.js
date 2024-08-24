@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (data.result && data.result.code === 'duplicate_parameter') {
                 // Show error animation and red gradient on button
-                showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'Subscribed!', 1.5); // Speed up the error animation
+                showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'You are already subscribed!', 1.5); // Speed up the error animation
                 subscribeButton.classList.add('jiggle-gradient-red');
                 emailInput.value = ''; // Clear the email input field
                 animationTriggered = true;
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // If no animation was triggered, display the default error after 2 seconds
             setTimeout(() => {
                 if (!animationTriggered) {
-                    showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'Subscribed!', 1.5); // Speed up the error animation
+                    showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'You are already subscribed!', 1.5); // Speed up the error animation
                     subscribeButton.classList.add('jiggle-gradient-red');
                     emailInput.value = ''; // Clear the email input field
                 }
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error:', error);
 
             // Show error notification and red gradient
-            showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'Subscribed!', 1.5); // Speed up the error animation
+            showNotification('https://lottie.host/c8066a95-41fe-4a3b-9598-1d685b7027d0/KulXoGiGz3.json', 'You are already subscribed!', 1.5); // Speed up the error animation
             subscribeButton.classList.add('jiggle-gradient-red');
             emailInput.value = ''; // Clear the email input field
         });
