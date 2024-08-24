@@ -2,21 +2,21 @@
     {
         "title": "Intro to Neuromorphic Computing",
         "date": "2024-09-01",
-        "address": "123 Tech Lane, Ames, IA",
+        "address": "123 Tech Lane,",
         "description": "A brief introduction to neuromorphic computing and its applications.",
         "details": "This event will cover the basics of neuromorphic computing, including potential applications in various industries."
     },
     {
         "title": "Neuromorphic Workshop",
         "date": "2024-08-25",
-        "address": "456 Innovation Blvd, Ames, IA",
+        "address": "456 Innovation Blvd,",
         "description": "Hands-on workshop for neuromorphic hardware and software development.",
         "details": "Participants will work with neuromorphic hardware and software tools to build simple neural networks."
     },
     {
         "title": "AI and Neuromorphic Synergy",
         "date": "2024-08-15",
-        "address": "789 Research Ave, Ames, IA",
+        "address": "789 Research Ave,",
         "description": "Exploring the intersection of AI and neuromorphic computing.",
         "details": "Experts in AI and neuromorphic computing will discuss how these two fields can synergize for better outcomes."
     }
