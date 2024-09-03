@@ -129,20 +129,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const subscribeButton = document.querySelector('.subscription-form button[type="submit"]');
     const emailInput = document.querySelector('.subscription-form input[type="email"]');
 
-    subscribeButton.addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent form submission for demo purposes
+    if (subscribeButton) {
+        subscribeButton.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent form submission for demo purposes
 
-        // Clear any existing error classes
-        subscribeButton.classList.remove('jiggle-gradient');
-        subscribeButton.classList.remove('jiggle-gradient-red');
+            // Clear any existing error classes
+            subscribeButton.classList.remove('jiggle-gradient');
+            subscribeButton.classList.remove('jiggle-gradient-red');
 
-        // Rely on the browser's built-in email validation
-        if (emailInput.checkValidity()) {
-            sendEmailToSendinblue(emailInput.value.trim());
-        } else {
-            emailInput.reportValidity(); // Show browser's default validation message
-        }
-    });
+            // Rely on the browser's built-in email validation
+            if (emailInput.checkValidity()) {
+                sendEmailToSendinblue(emailInput.value.trim());
+            } else {
+                emailInput.reportValidity(); // Show browser's default validation message
+            }
+        });
+    }
 
     // Function to show the notification
     function showNotification(animationSrc, message, speed = 1) {
@@ -232,51 +234,142 @@ document.addEventListener('DOMContentLoaded', function () {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
         if (scrollTop > lastScrollTop) {
-        // Scrolling down, hide the navigation
-        header.style.top = "-100px"; // Hide header by moving it off-screen
-        if (window.innerWidth <= 1024) {
-            menuToggle.style.display = "none"; // Hide toggle menu
-        }
-    } else {
-        // Scrolling up, show the navigation with shadow if past hero section
-        if (scrollTop > heroHeight) {
-            header.classList.add('header-shadow');
+            // Scrolling down, hide the navigation
+            header.style.top = "-100px"; // Hide header by moving it off-screen
             if (window.innerWidth <= 1024) {
-                menuToggle.style.display = "flex"; // Show toggle menu only on smaller screens
+                menuToggle.style.display = "none"; // Hide toggle menu
             }
         } else {
-            header.classList.remove('header-shadow');
-            if (window.innerWidth <= 1024) {
-                menuToggle.style.display = "flex"; // Ensure toggle menu is visible in header/hero sections
+            // Scrolling up, show the navigation with shadow if past hero section
+            if (scrollTop > heroHeight) {
+                header.classList.add('header-shadow');
+                if (window.innerWidth <= 1024) {
+                    menuToggle.style.display = "flex"; // Show toggle menu only on smaller screens
+                }
             } else {
-                menuToggle.style.display = "none"; // Hide toggle menu on wide screens
+                header.classList.remove('header-shadow');
+                if (window.innerWidth <= 1024) {
+                    menuToggle.style.display = "flex"; // Ensure toggle menu is visible in header/hero sections
+                } else {
+                    menuToggle.style.display = "none"; // Hide toggle menu on wide screens
+                }
             }
+            header.style.top = "0"; // Show header by moving it back to the top
         }
-        header.style.top = "0"; // Show header by moving it back to the top
+
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
     }
 
-    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
-}
+    // Add event listener for scrolling
+    window.addEventListener('scroll', handleScroll);
 
-// Add event listener for scrolling
-window.addEventListener('scroll', handleScroll);
+    // Ensure the navigation is correctly set when the page is loaded
+    handleScroll();
 
-// Ensure the navigation is correctly set when the page is loaded
-handleScroll();
+    // Add logic for showing/hiding toggle menu based on screen size
+    window.addEventListener('resize', function () {
+        if (window.innerWidth > 1024) {
+            menuToggle.style.display = "none"; // Hide toggle on wide screens
+        } else {
+            menuToggle.style.display = "flex"; // Show toggle on smaller screens
+        }
+    });
 
-// Add logic for showing/hiding toggle menu based on screen size
-window.addEventListener('resize', function () {
+    // Initial check on page load
     if (window.innerWidth > 1024) {
         menuToggle.style.display = "none"; // Hide toggle on wide screens
     } else {
         menuToggle.style.display = "flex"; // Show toggle on smaller screens
     }
-});
 
-// Initial check on page load
-if (window.innerWidth > 1024) {
-    menuToggle.style.display = "none"; // Hide toggle on wide screens
-} else {
-    menuToggle.style.display = "flex"; // Show toggle on smaller screens
-}
+    // Function to load events from the .txt file
+    function loadEventsFromTxt(startIndex = 0, loadAmount = 4) {
+        fetch('/static/events.txt')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                return response.text();
+            })
+            .then(text => {
+                const events = text.split('\n').filter(line => line.trim() !== '');
+                const eventsContainer = document.querySelector('.events-container');
+                const endIndex = Math.min(startIndex + loadAmount, events.length);
+
+                for (let i = startIndex; i < endIndex; i++) {
+                    // Split by pipe (|) instead of comma
+                    const eventDetails = events[i].split("|");
+
+                    const title = eventDetails[0]?.trim() || 'No Title';
+                    const date = eventDetails[1]?.trim() || 'Date not available';
+                    const address = eventDetails[2]?.trim() || 'Address not available';
+                    const shortDesc = eventDetails[3]?.trim() || '';
+                    const fullText = eventDetails[4]?.trim() || '';
+
+                    const eventCard = document.createElement('div');
+                    eventCard.classList.add('event-card');
+
+                    const eventDate = new Date(date);
+                    const currentDate = new Date();
+
+                    if (eventDate < currentDate) {
+                        eventCard.classList.add('past-event');
+                    }
+
+                    eventCard.innerHTML = `
+                        <h3>${title}</h3>
+                        <p><strong>Date:</strong> ${date}</p>
+                        <p><strong>Address:</strong> ${address}</p>
+                        <p>${shortDesc}</p>
+                        ${fullText ? `<p>${fullText}</p>` : ''}
+                    `;
+
+                    eventsContainer.appendChild(eventCard);
+                }
+
+                if (endIndex >= events.length) {
+                    document.getElementById('load-more').style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error loading events:', error));
+    }
+
+    // Load initial events
+    let loadedEvents = 0;
+    loadEventsFromTxt(loadedEvents, 4);
+    loadedEvents += 4;
+
+    // Load more events on button click
+    document.getElementById('load-more').addEventListener('click', function () {
+        loadEventsFromTxt(loadedEvents, 4);
+        loadedEvents += 4;
+    });
+
+    // Conveyor belt logic for independent elements
+    const conveyor = document.querySelector('.conveyor');
+    const images = Array.from(conveyor.children);
+
+    images.forEach((img, index) => {
+        // Initial positioning of images
+        img.style.transform = `translateX(${index * 100}px)`;
+    });
+
+    function moveImages() {
+        images.forEach((img, index) => {
+            const currentX = parseFloat(img.style.transform.match(/-?\d+\.?\d*/)[0]);
+
+            // Move image to the left
+            img.style.transform = `translateX(${currentX - 100}px)`;
+
+            // If the image is completely out of view on the left, move it to the right
+            if (currentX <= -100) {
+                const maxX = Math.max(...images.map(i => parseFloat(i.style.transform.match(/-?\d+\.?\d*/)[0])));
+                img.style.transform = `translateX(${maxX + 100}px)`;
+            }
+        });
+
+        requestAnimationFrame(moveImages);
+    }
+
+    moveImages();
 });
